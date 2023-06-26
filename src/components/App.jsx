@@ -2,7 +2,7 @@ import { number } from "prop-types";
 import React, { Component } from "react";
 import Form from "./ContactForm/ContactForm";
 import { ContactList } from "./ContactList/ContactList";
-
+import Notiflix from 'notiflix';
 
 
 
@@ -23,6 +23,14 @@ export class App extends Component {
  
   onSubmit = (e) => {
     e.preventDefault();
+
+
+    // if (!this.state.name.trim() && !this.state.number.trim()) {
+    //   console.log("error");
+    //   return
+    // }
+    
+
     const newContact = {
       name: this.state.name,
       number: this.state.number,
@@ -34,7 +42,8 @@ export class App extends Component {
       name: '',
       number: ''
     }));
-  };
+    Notiflix.Notify.success('Contact added successfully')
+  }
 
   onDeleteBtn = (id) => {
     this.setState(prevState => ({
