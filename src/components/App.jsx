@@ -1,9 +1,10 @@
-import { number } from "prop-types";
+
 import React, { Component } from "react";
 import Form from "./ContactForm/ContactForm";
 import { ContactList } from "./ContactList/ContactList";
 import Notiflix from 'notiflix';
 import { Filter } from "./Filter/Filter";
+import { nanoid } from 'nanoid'
 
 
 
@@ -13,7 +14,8 @@ export class App extends Component {
   contacts: [],
   name: '',
   number: '',
-  filterContacts: null,
+    filter: [],
+    isNotification: false
   }
 
   handleChange = ({ target }) => {
@@ -39,14 +41,14 @@ export class App extends Component {
     const newContact = {
       name: this.state.name,
       number: this.state.number,
-      id: Date.now()
+      id: nanoid()
     };
 
 
 
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
-      filterContacts: [...prevState.contacts, newContact],
+      filter: [...prevState.contacts, newContact],
       name: '',
       number: ''
     }));
@@ -54,18 +56,21 @@ export class App extends Component {
   }
   
 handleFilter = ({ target }) => {
-  const { contacts } = this.state;
+  const { filter, isNotification } = this.state;
   const filterValue = target.value.toLowerCase().trim();
-
-  const filteredContacts = contacts.filter(
+  
+  const filteredContacts = filter.filter(
     contact => contact.name.toLowerCase().includes(filterValue)
   );
 
-  if (filteredContacts.length === 0) {
+  if (filteredContacts.length === 0 && !isNotification) {
     Notiflix.Notify.info('No search');
+    this.setState({ isNotification: true})
+    setTimeout(() => {
+      this.setState({ isNotification: false})
+    }, 3000);
   }
-
-  this.setState({ filterContacts: filteredContacts });
+  this.setState({ contacts: filteredContacts});
 }
     
 
@@ -73,7 +78,7 @@ handleFilter = ({ target }) => {
   onDeleteBtn = (id) => {
     this.setState(prevState => ({
       contacts: [...prevState.contacts.filter(contact => contact.id !== id)],
-      filterContacts: [...prevState.filterContacts.filter(contact => contact.id !== id)],
+      filter: [...prevState.filter.filter(contact => contact.id !== id)],
     }))
   }
 
@@ -89,7 +94,8 @@ render() {
           
         <h2>Contacts</h2>
         <Filter onChange={this.handleFilter}/>
-        <ContactList contacts={this.state.filterContacts ? this.state.filterContacts : this.state.contacts} onDeleteBtn={this.onDeleteBtn} />
+        <ContactList contacts={this.state.contacts} onDeleteBtn={this.onDeleteBtn} />
+
       </div>
     </>
   );
