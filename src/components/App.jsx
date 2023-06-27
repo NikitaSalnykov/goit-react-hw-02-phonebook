@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Form from "./ContactForm/ContactForm";
 import { ContactList } from "./ContactList/ContactList";
 import Notiflix from 'notiflix';
+import { Filter } from "./Filter/Filter";
 
 
 
@@ -12,7 +13,7 @@ export class App extends Component {
   contacts: [],
   name: '',
   number: '',
-  originalContacts: [],
+  filterContacts: null,
   }
 
   handleChange = ({ target }) => {
@@ -29,6 +30,11 @@ export class App extends Component {
       Notiflix.Notify.failure('Empty input!')
       return
     }
+
+    if (this.state.contacts.some(contact => contact.name.toLowerCase() === this.state.name.toLowerCase())) {
+      Notiflix.Notify.info(`${this.state.name} is already in contcts`)
+      return
+    }
     
     const newContact = {
       name: this.state.name,
@@ -36,31 +42,38 @@ export class App extends Component {
       id: Date.now()
     };
 
+
+
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
+      filterContacts: [...prevState.contacts, newContact],
       name: '',
       number: ''
     }));
     Notiflix.Notify.success('Contact added successfully')
   }
   
-  handleFilter = ({ target }) => {
-    const { contacts, originalContacts } = this.state;
-    const filterValue = target.value.toLowerCase();
+handleFilter = ({ target }) => {
+  const { contacts } = this.state;
+  const filterValue = target.value.toLowerCase().trim();
 
-    const filteredContacts = contacts.filter(
-      contact => contact.name.toLowerCase().includes(filterValue)
-    );
+  const filteredContacts = contacts.filter(
+    contact => contact.name.toLowerCase().includes(filterValue)
+  );
 
-    this.setState({ originalContacts: filteredContacts });
-
+  if (filteredContacts.length === 0) {
+    Notiflix.Notify.info('No search');
   }
+
+  this.setState({ filterContacts: filteredContacts });
+}
     
 
   
   onDeleteBtn = (id) => {
     this.setState(prevState => ({
-    contacts: [...prevState.contacts.filter(contact => contact.id !== id)]
+      contacts: [...prevState.contacts.filter(contact => contact.id !== id)],
+      filterContacts: [...prevState.filterContacts.filter(contact => contact.id !== id)],
     }))
   }
 
@@ -75,9 +88,8 @@ render() {
         <Form onSubmit={this.onSubmit} handleChange={this.handleChange} name={this.state.name} number={this.state.number} />
           
         <h2>Contacts</h2>
-        <label htmlFor="filter">Find contacts by name</label>
-        <input type="text" name="input" id="input" onChange={this.handleFilter}/>
-        <ContactList contacts={this.state.originalContacts.length > 0 ? this.state.originalContacts : this.state.contacts} onDeleteBtn={this.onDeleteBtn} />
+        <Filter onChange={this.handleFilter}/>
+        <ContactList contacts={this.state.filterContacts ? this.state.filterContacts : this.state.contacts} onDeleteBtn={this.onDeleteBtn} />
       </div>
     </>
   );
