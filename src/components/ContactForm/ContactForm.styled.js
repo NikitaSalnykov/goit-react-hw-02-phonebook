@@ -17,13 +17,12 @@ export const Button = styled.button`
     padding: 5px 10px;
     border: 1px solid black;
     border-radius: 5px;
-    transform: scale(1);
-    transition:  background-color 0.5s ease, transform 0.1s ease;
+    transition:  background-color 0.1s ease;
   &:hover {
     background-color: lightgrey;
     
   } &:active {
-    transform: scale(1.01);
+    background-color: lightblue;
     }
 `
 
