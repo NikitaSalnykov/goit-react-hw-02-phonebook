@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types'
 import React from 'react';
+import {Button, Form, Input} from './ContactForm.styled'
 
-const Form = ({onSubmit, handleChange, name, number}) => {
+const ContactForm = ({onSubmit, handleChange, name, number}) => {
 
     return (
-      <form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit}>
         <div>
           <label htmlFor="name">Name</label>
-          <input
+          <Input
             id="name"
             type="text"
             name="name"
@@ -18,7 +19,7 @@ const Form = ({onSubmit, handleChange, name, number}) => {
             value={name}
           />
           <label htmlFor="tel">Number</label>
-          <input
+          <Input
             id="tel"
             type="tel"
             name="number"
@@ -28,10 +29,18 @@ const Form = ({onSubmit, handleChange, name, number}) => {
             onChange={handleChange}
             value={number}
           />
-          <button type="submit">Add contact</button>
+          <Button type="submit">Add contact</Button>
           </div>
-          </form>
+          </Form>
            );
   }
  
-export default Form;
+export default ContactForm;
+
+ContactForm.propTypes = {
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired
+    
+}

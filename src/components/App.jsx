@@ -1,6 +1,6 @@
 
 import React, { Component } from "react";
-import Form from "./ContactForm/ContactForm";
+import ContactForm from "./ContactForm/ContactForm";
 import { ContactList } from "./ContactList/ContactList";
 import Notiflix from 'notiflix';
 import { Filter } from "./Filter/Filter";
@@ -90,7 +90,7 @@ render() {
     <>
       <div>
         <h2>Phonebook</h2>
-        <Form onSubmit={this.onSubmit} handleChange={this.handleChange} name={this.state.name} number={this.state.number} />
+        <ContactForm onSubmit={this.onSubmit} handleChange={this.handleChange} name={this.state.name} number={this.state.number} />
           
         <h2>Contacts</h2>
         <Filter onChange={this.handleFilter}/>
