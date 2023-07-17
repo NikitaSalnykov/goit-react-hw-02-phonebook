@@ -6,9 +6,6 @@ import Notiflix from 'notiflix';
 import { Filter } from "./Filter/Filter";
 import { nanoid } from 'nanoid'
 
-
-
-
 export class App extends Component {
 
   state = {
@@ -34,20 +31,18 @@ handleFormSubmit = (formData) => {
   Notiflix.Notify.success('Contact added successfully');
   };
   
-  onDeleteBtn = (id) => {
+onDeleteBtn = (id) => {
     this.setState(prevState => ({
       contacts: [...prevState.contacts.filter(contact => contact.id !== id)],
       filter: [...prevState.filter.filter(contact => contact.id !== id)],
     }))
   }
 
-  handleFilter = (filteredContacts) => {
+handleFilter = (filteredContacts) => {
   this.setState({ contacts: filteredContacts });
-};
+  };
 
 
-
-  
 render() {
   return (
     <>

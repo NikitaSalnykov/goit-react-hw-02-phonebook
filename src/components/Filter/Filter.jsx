@@ -2,6 +2,7 @@ import { Input } from 'components/ContactForm/ContactForm.styled'
 import PropTypes from 'prop-types'
 import Notiflix from 'notiflix';
 import React, { Component } from "react";
+import { Label } from './Filter.styled';
 
 export class Filter extends Component {
   state = {
@@ -36,9 +37,14 @@ export class Filter extends Component {
   render() {
     return (
       <div>
-        <label style={{ marginRight: '14px' }} htmlFor="filter">Find contacts by name</label>
+        <Label style={{ marginRight: '14px' }} htmlFor="filter">Find contacts by name</Label>
         <Input type="text" name="input" id="filter" onChange={this.handleFilter} />
       </div>
     )
   }
 }
+
+Filter.propTypes = {
+  onFilter: PropTypes.func.isRequired,
+  filter: PropTypes.arrayOf(PropTypes.object).isRequired
+};
