@@ -8,72 +8,31 @@ import { nanoid } from 'nanoid'
 
 
 
+
 export class App extends Component {
 
   state = {
   contacts: [],
-  name: '',
-  number: '',
-    filter: [],
-    isNotification: false
+  filter: [],
   }
 
-  handleChange = ({ target }) => {
-    this.setState({
-      [target.name]: target.value
-    })
-  }
-
- 
-  onSubmit = (e) => {
-    e.preventDefault();
-
-    if (!this.state.name.trim() && !this.state.number.trim()) {
-      Notiflix.Notify.failure('Empty input!')
-      return
-    }
-
-    if (this.state.contacts.some(contact => contact.name.toLowerCase() === this.state.name.toLowerCase())) {
-      Notiflix.Notify.info(`${this.state.name} is already in contcts`)
-      return
-    }
-    
-    const newContact = {
-      name: this.state.name,
-      number: this.state.number,
-      id: nanoid()
-    };
-
-
-
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
-      filter: [...prevState.contacts, newContact],
-      name: '',
-      number: ''
-    }));
-    Notiflix.Notify.success('Contact added successfully')
-  }
   
-handleFilter = ({ target }) => {
-  const { filter, isNotification } = this.state;
-  const filterValue = target.value.toLowerCase().trim();
-  
-  const filteredContacts = filter.filter(
-    contact => contact.name.toLowerCase().includes(filterValue)
-  );
 
-  if (filteredContacts.length === 0 && !isNotification) {
-    Notiflix.Notify.info('No search');
-    this.setState({ isNotification: true})
-    setTimeout(() => {
-      this.setState({ isNotification: false})
-    }, 3000);
-  }
-  this.setState({ contacts: filteredContacts});
-}
-    
+handleFormSubmit = (formData) => {
+  const { name, number } = formData;
+  const newContact = {
+    name: name,
+    number: number,
+    id: nanoid()
+  };
 
+  this.setState(prevState => ({
+    contacts: [...prevState.contacts, newContact],
+    filter: [...prevState.contacts, newContact],
+  }));
+
+  Notiflix.Notify.success('Contact added successfully');
+  };
   
   onDeleteBtn = (id) => {
     this.setState(prevState => ({
@@ -81,6 +40,10 @@ handleFilter = ({ target }) => {
       filter: [...prevState.filter.filter(contact => contact.id !== id)],
     }))
   }
+
+  handleFilter = (filteredContacts) => {
+  this.setState({ contacts: filteredContacts });
+};
 
 
 
@@ -90,10 +53,10 @@ render() {
     <>
       <div>
         <h2>Phonebook</h2>
-        <ContactForm onSubmit={this.onSubmit} handleChange={this.handleChange} name={this.state.name} number={this.state.number} />
-          
+      
+        <ContactForm onSubmit={this.handleFormSubmit} contacts={ this.state.contacts } />
         <h2>Contacts</h2>
-        <Filter onChange={this.handleFilter}/>
+        <Filter filter={this.state.filter} onFilter={this.handleFilter} />
         <ContactList contacts={this.state.contacts} onDeleteBtn={this.onDeleteBtn} />
 
       </div>
