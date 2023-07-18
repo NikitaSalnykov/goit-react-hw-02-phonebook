@@ -10,12 +10,10 @@ export class App extends Component {
 
   state = {
   contacts: [],
-  filter: [],
+  filter: '',
   }
 
-  
-
-handleFormSubmit = (formData) => {
+  handleFormSubmit = (formData) => {
   const { name, number } = formData;
   const newContact = {
     name: name,
@@ -25,23 +23,29 @@ handleFormSubmit = (formData) => {
 
   this.setState(prevState => ({
     contacts: [...prevState.contacts, newContact],
-    filter: [...prevState.contacts, newContact],
   }));
 
   Notiflix.Notify.success('Contact added successfully');
   };
-  
-onDeleteBtn = (id) => {
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts.filter(contact => contact.id !== id)],
-      filter: [...prevState.filter.filter(contact => contact.id !== id)],
-    }))
+
+  handleFilter = ({ target }) => {
+    this.setState({ filter: target.value })
   }
 
-handleFilter = (filteredContacts) => {
-  this.setState({ contacts: filteredContacts });
-  };
-
+  getFilteredContacts = () => {
+    const { filter, contacts } = this.state 
+    
+    const normilizedFilterValue = filter.toLowerCase();
+    return contacts.filter(
+      contact => contact.name.toLowerCase().includes(normilizedFilterValue)
+    );
+  }
+  
+  onDeleteBtn = (id) => {
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts.filter(contact => contact.id !== id)],
+    }))
+  }
 
 render() {
   return (
@@ -51,8 +55,8 @@ render() {
       
         <ContactForm onSubmit={this.handleFormSubmit} contacts={ this.state.contacts } />
         <h2>Contacts</h2>
-        <Filter filter={this.state.filter} onFilter={this.handleFilter} />
-        <ContactList contacts={this.state.contacts} onDeleteBtn={this.onDeleteBtn} />
+        <Filter filter={this.state.filter} handleFilter={this.handleFilter} />
+        <ContactList contacts={this.getFilteredContacts()} onDeleteBtn={this.onDeleteBtn} />
 
       </div>
     </>
