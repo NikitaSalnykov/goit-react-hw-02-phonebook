@@ -26,13 +26,7 @@ export class ContactForm extends Component {
       return
     }
 
-    if (this.props.contacts.some(contact => contact.name.toLowerCase() === this.state.name.toLowerCase())) {
-      Notiflix.Notify.info(`${this.state.name} is already in contcts`)
-      return
-    }
-    
-    const { name, number } = this.state;
-    this.props.onSubmit({ name, number });
+    this.props.onSubmit(this.state);
   }
 
   render() {
@@ -73,6 +67,5 @@ export default ContactForm;
 
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  contacts: PropTypes.arrayOf(PropTypes.object).isRequired
 };
  

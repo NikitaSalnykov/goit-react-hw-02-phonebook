@@ -13,8 +13,13 @@ export class App extends Component {
   filter: '',
   }
 
-  handleFormSubmit = (formData) => {
-  const { name, number } = formData;
+  handleFormSubmit = ({ name, number }) => {  
+
+  if (this.state.contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())) {
+    Notiflix.Notify.info(`${name} is already in contcts`)
+    return
+  };
+
   const newContact = {
     name: name,
     number: number,
@@ -53,7 +58,7 @@ render() {
       <div>
         <h2>Phonebook</h2>
       
-        <ContactForm onSubmit={this.handleFormSubmit} contacts={ this.state.contacts } />
+        <ContactForm onSubmit={this.handleFormSubmit}/>
         <h2>Contacts</h2>
         <Filter filter={this.state.filter} handleFilter={this.handleFilter} />
         <ContactList contacts={this.getFilteredContacts()} onDeleteBtn={this.onDeleteBtn} />
