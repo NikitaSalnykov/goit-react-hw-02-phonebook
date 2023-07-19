@@ -1,7 +1,6 @@
 import { Input } from 'components/ContactForm/ContactForm.styled'
 import PropTypes from 'prop-types'
-import Notiflix from 'notiflix';
-import React, { Component } from "react";
+import React from "react";
 import { Label } from './Filter.styled';
 
 
